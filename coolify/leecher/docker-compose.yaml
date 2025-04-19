@@ -1,0 +1,62 @@
+version: '3.7'
+services:
+  prowlarr:
+    image: 'linuxserver/prowlarr:latest'
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - '/storage/coolify/prowlarr:/config'
+    ports:
+      - '8686:8686'
+  sonarr:
+    image: 'linuxserver/sonarr:latest'
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - '/storage/coolify/sonarr:/config'
+      - '/storage/jellyfin/shows:/tv'
+      - '/storage/jellyfin/shows:/downloads'
+    ports:
+      - '8989:8989'
+    depends_on:
+      - prowlarr
+  radarr:
+    image: 'linuxserver/radarr:latest'
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - '/storage/coolify/radarr:/config'
+      - '/storage/jellyfin/movies:/movies'
+      - '/storage/jellyfin/movies:/downloads'
+    ports:
+      - '7878:7878'
+    depends_on:
+      - prowlarr
+  qbittorrent:
+    container_name: qbittorrent
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - 'QBT_EULA=${QBT_EULA}'
+      - 'QBT_VERSION=${QBT_VERSION}'
+      - 'QBT_WEBUI_PORT=${QBT_WEBUI_PORT}'
+      - TZ=Asia/Kolkata
+      - UMASK=022
+    image: 'qbittorrentofficial/qbittorrent-nox:${QBT_VERSION}'
+    ports:
+      - '6881:6881/tcp'
+      - '6881:6881/udp'
+      - '8045:8045/tcp'
+    volumes:
+      - '/storage/coolify:/config'
+      - '/storage:/downloads'
+

@@ -1,0 +1,10 @@
+services:
+  pocketbase:
+    image: 'ghcr.io/coollabsio/pocketbase:latest'
+    environment:
+      - SERVICE_FQDN_POCKETBASE
+    volumes:
+      - '/storage/coolify/pb:/app/pb_data'
+    ports:
+      - '8020:8080'
+

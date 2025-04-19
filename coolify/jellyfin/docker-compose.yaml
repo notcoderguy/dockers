@@ -1,0 +1,34 @@
+services:
+  jellyfin:
+    image: 'lscr.io/linuxserver/jellyfin:latest'
+    environment:
+      - SERVICE_FQDN_JELLYFIN
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - JELLYFIN_PublishedServerUrl=$SERVICE_FQDN_JELLYFIN
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+      - RUNTIME=nvidia
+    volumes:
+      - '/storage/jellyfin/config:/config'
+      - '/storage/jellyfin/shows:/data/tvshows'
+      - '/storage/jellyfin/movies:/data/movies'
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:8096'
+      interval: 2s
+      timeout: 10s
+      retries: 15
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            -
+              capabilities:
+                - gpu
+

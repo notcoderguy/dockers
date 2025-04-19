@@ -1,0 +1,18 @@
+services:
+  appsmith:
+    image: 'index.docker.io/appsmith/appsmith-ce:latest'
+    environment:
+      - SERVICE_FQDN
+      - APPSMITH_MAIL_ENABLED=false
+      - APPSMITH_DISABLE_TELEMETRY=true
+      - APPSMITH_DISABLE_INTERCOM=true
+      - APPSMITH_SENTRY_DSN=
+      - APPSMITH_SMART_LOOK_ID=
+    volumes:
+      - 'stacks-data:/appsmith-stacks'
+    healthcheck:
+      test:
+        - NONE
+    ports:
+      - '8015:80'
+
